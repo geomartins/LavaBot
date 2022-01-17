@@ -1,0 +1,18 @@
+{
+    "name": "LavaBot",
+    "description": "",
+    "services": [
+        {
+            "type": "endpoint",
+            "name": "http://localhost:3978/api/messages",
+            "id": "00bc9900-75f5-11ec-9b5d-715394fd9a6d",
+            "appId": "",
+            "appPassword": "",
+            "endpoint": "http://localhost:3978/api/messages"
+        }
+    ],
+    "padlock": "",
+    "version": "2.0",
+    "path": "C:\\Users\\amartins\\Desktop\\nlp\\lava-bot\\LavaBot.bot",
+    "overrides": null
+}

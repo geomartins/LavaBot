@@ -1,16 +1,30 @@
 // Copyright (c) Microsoft Corporation. All rights reserved.
 // Licensed under the MIT License.
+import { ActivityHandler, ConversationState, MessageFactory, StatePropertyAccessor, TurnContext, UserState } from 'botbuilder';
+import { DialogContext, DialogSet, DialogTurnStatus } from 'botbuilder-dialogs';
+import { CustomBotInterface } from './configs/interfacess';
+import { Dialog } from './configs/typess';
+import { ContactDialog, ContactDialogId } from './dialogs/contact_dialog';
+import { ExitDialog, ExitDialogId } from './dialogs/exit_dialog';
+import { MainMenuDialog, MainMenuDialogId } from './dialogs/main_menu_dialog';
 
-import { ActivityHandler, MessageFactory } from 'botbuilder';
+export class LavaBot extends ActivityHandler implements CustomBotInterface {
+    dialogSet: DialogSet;
+    dialogContext: DialogContext;
 
-export class EchoBot extends ActivityHandler {
-    constructor() {
+    constructor(private userState: UserState, private conversationState: ConversationState, private dialogState: StatePropertyAccessor) {
         super();
-        // See https://aka.ms/about-bot-activity-message to learn more about the message and other activity types.
+
+
+        //ADD ALL DIALOGS TO DIALOG SET
+        this.dialogSet = new DialogSet(dialogState);
+        this.dialogSet.add(new MainMenuDialog(dialogState));
+        this.dialogSet.add(new ContactDialog(dialogState))
+        this.dialogSet.add(new ExitDialog(dialogState))
+       
+
         this.onMessage(async (context, next) => {
-            const replyText = `Echo: ${ context.activity.text }`;
-            await context.sendActivity(MessageFactory.text(replyText, replyText));
-            // By calling next() you ensure that the next BotHandler is run.
+            await this.router(context);
             await next();
         });
 
@@ -19,11 +33,43 @@ export class EchoBot extends ActivityHandler {
             const welcomeText = 'Hello and welcome!';
             for (const member of membersAdded) {
                 if (member.id !== context.activity.recipient.id) {
-                    await context.sendActivity(MessageFactory.text(welcomeText, welcomeText));
+                    await context.sendActivity(MessageFactory.text(welcomeText, welcomeText)); 
                 }
             }
             // By calling next() you ensure that the next BotHandler is run.
             await next();
         });
+    }
+
+    async router(context: TurnContext){
+        let message = context.activity.text;
+        this.dialogContext = await this.dialogSet.createContext(context);
+
+        switch(message) {
+            case 'cancel':
+                console.log('cancel swich')
+                await this.efficientRoute(this.dialogContext, ExitDialogId)
+                break;
+            case 'Contact':
+                await this.efficientRoute(this.dialogContext, ContactDialogId)
+                break;
+            default:
+                console.log('other swich')
+                await this.efficientRoute(this.dialogContext, MainMenuDialogId)
+        }
+    }
+
+    async efficientRoute(dialogContext: DialogContext, dialogId: string){
+        const results = await dialogContext.continueDialog();
+        console.log(` xxxx ${dialogId} ${results.status}`)
+        if (results.status === DialogTurnStatus.empty) {
+            await this.dialogContext.beginDialog(dialogId);
+        }
+    }
+  
+    async run(context: TurnContext) {
+        await super.run(context);
+        await this.conversationState.saveChanges(context, true);
+        await this.userState.saveChanges(context, true);
     }
 }

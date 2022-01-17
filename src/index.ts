@@ -16,18 +16,23 @@ import { INodeSocket } from 'botframework-streaming';
 import {
     CloudAdapter,
     ConfigurationServiceClientCredentialFactory,
-    createBotFrameworkAuthenticationFromConfiguration
+    ConversationState,
+    createBotFrameworkAuthenticationFromConfiguration,
+    MemoryStorage,
+    UserState
 } from 'botbuilder';
 
 // This bot's main dialog.
-import { EchoBot } from './bot';
+import { LavaBot } from './bot';
+import { Dialog } from './configs/typess';
+import { DialogSet } from 'botbuilder-dialogs';
 
 
 // Create HTTP server.
 const server = restify.createServer();
 server.use(restify.plugins.bodyParser());
 
-server.listen(process.env.port || process.env.PORT || 3978, () => {
+server.listen(process.env.port || process.env.PORT || 3979, () => {
     console.log(`\n${server.name} listening to ${server.url}`);
     console.log('\nGet Bot Framework Emulator: https://aka.ms/botframework-emulator');
     console.log('\nTo talk to your bot, open the emulator select "Open Bot"');
@@ -69,13 +74,18 @@ const onTurnErrorHandler = async (context, error) => {
 // Set the onTurnError for the singleton CloudAdapter.
 adapter.onTurnError = onTurnErrorHandler;
 
+const memoryStorage = new MemoryStorage();
+const conversationState = new ConversationState(memoryStorage);
+const userState = new UserState(memoryStorage);
+const dialogState = conversationState.createProperty('dialogState')
+const dialogSet = new DialogSet(dialogState);
 // Create the main dialog.
-const myBot = new EchoBot();
+const lavaBot = new LavaBot(userState, conversationState, dialogState);
 
 // Listen for incoming requests.
 server.post('/api/messages', async (req, res) => {
     // Route received a request to adapter for processing
-    await adapter.process(req, res, (context) => myBot.run(context));
+    await adapter.process(req, res, (context) => lavaBot.run(context));
 });
 
 // Listen for Upgrade requests for Streaming.
@@ -86,5 +96,5 @@ server.on('upgrade', async (req, socket, head) => {
     // Set onTurnError for the CloudAdapter created for each connection.
     streamingAdapter.onTurnError = onTurnErrorHandler;
 
-    await streamingAdapter.process(req, socket as unknown as INodeSocket, head, (context) => myBot.run(context));
+    await streamingAdapter.process(req, socket as unknown as INodeSocket, head, (context) => lavaBot.run(context));
 });

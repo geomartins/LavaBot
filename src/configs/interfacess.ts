@@ -9,10 +9,9 @@ interface CustomDialogInterface{
 }
 
 interface CustomBotInterface{
-    dialogSet: DialogSet,
+    // dialogSet: DialogSet,
     dialogContext: DialogContext,
     run(context: TurnContext): Promise<void>
-    router(context: TurnContext): Promise<void>
 }
 
 

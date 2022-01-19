@@ -7,6 +7,10 @@
 
 import { DialogContext } from "botbuilder-dialogs"
 
+type MiddlewareData = {
+    isAuthenticated?: boolean,
+    isTerminated?: boolean
+}
 type Dialog = {
     isDialogComplete?: boolean,
     name?: string,
@@ -17,5 +21,6 @@ type Dialog = {
     dc?: DialogContext
 }
 export {
-    Dialog
+    Dialog,
+    MiddlewareData
 }

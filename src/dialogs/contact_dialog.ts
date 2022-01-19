@@ -13,7 +13,7 @@ class ContactDialog extends ComponentDialog implements CustomDialogInterface{
     constructor(private dialogState: StatePropertyAccessor<Dialog>){
         super(ContactDialogId)
 
-        this.addDialog(new TextPrompt(EMAIL_PROMPT))
+        this.addDialog(new TextPrompt(EMAIL_PROMPT, LavaValidator.emailValidator))
         this.addDialog(new WaterfallDialog(ContactWaterfallId, [
             this.beginStep.bind(this),
             this.summaryStepx.bind(this),

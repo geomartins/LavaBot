@@ -1,11 +1,11 @@
 {
-    "name": "LavalBot2",
+    "name": "MainBot",
     "description": "",
     "services": [
         {
             "type": "endpoint",
             "name": "http://localhost:3979/api/messages",
-            "id": "e5075cf0-7765-11ec-9b5d-715394fd9a6d",
+            "id": "c9ffa1c0-7890-11ec-aaea-75c5957b0c24",
             "appId": "",
             "appPassword": "",
             "endpoint": "http://localhost:3979/api/messages"
@@ -13,6 +13,6 @@
     ],
     "padlock": "",
     "version": "2.0",
-    "path": "C:\\Users\\amartins\\Desktop\\nlp\\lava-bot\\LavalBot2.bot",
+    "path": "C:\\Users\\amartins\\Desktop\\nlp\\lava-bot\\MainBot.bot",
     "overrides": null
 }

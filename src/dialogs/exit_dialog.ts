@@ -20,12 +20,14 @@ class ExitDialog extends ComponentDialog implements CustomDialogInterface {
 
         this.initialDialogId = ExitDialogWaterfallId;
     }
-    
+
     async beginStep(stepContext: WaterfallStepContext) {
+       
        return await stepContext.context.sendActivity(MessageFactory.text('You just exited the prompt'));
     }
 
     async endStep(stepContext: WaterfallStepContext){
+       
         await stepContext.cancelAllDialogs(true);
         return await stepContext.endDialog();
     }

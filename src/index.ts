@@ -19,13 +19,15 @@ import {
     ConversationState,
     createBotFrameworkAuthenticationFromConfiguration,
     MemoryStorage,
+    MiddlewareSet,
     UserState
 } from 'botbuilder';
 
 // This bot's main dialog.
 import { LavaBot } from './bot';
-import { Dialog } from './configs/typess';
-import { DialogSet } from 'botbuilder-dialogs';
+import Kernel from './sets/custom_middleware_set';
+import { CustomDialogSet } from './sets/custom_dialog_set';
+import CustomMiddlewareSet from './sets/custom_middleware_set';
 
 
 // Create HTTP server.
@@ -74,13 +76,23 @@ const onTurnErrorHandler = async (context, error) => {
 // Set the onTurnError for the singleton CloudAdapter.
 adapter.onTurnError = onTurnErrorHandler;
 
+
+//Create [memoryStorage], [converstaionState], [userState]
 const memoryStorage = new MemoryStorage();
 const conversationState = new ConversationState(memoryStorage);
 const userState = new UserState(memoryStorage);
+
+// Create [dialogState], [dialogSet]
 const dialogState = conversationState.createProperty('dialogState')
-const dialogSet = new DialogSet(dialogState);
+const dialogSet = new CustomDialogSet(dialogState).init();
+
+//Register Middleware
+const customMiddlewareSet = new CustomMiddlewareSet(dialogState, dialogSet).init();
+adapter.use(customMiddlewareSet);
+
+
 // Create the main dialog.
-const lavaBot = new LavaBot(userState, conversationState, dialogState);
+const lavaBot = new LavaBot(userState, conversationState, dialogState, dialogSet);
 
 // Listen for incoming requests.
 server.post('/api/messages', async (req, res) => {

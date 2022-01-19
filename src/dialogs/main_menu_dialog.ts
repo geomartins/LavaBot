@@ -1,4 +1,4 @@
-import { MessageFactory, StatePropertyAccessor, TurnContext } from "botbuilder";
+import { StatePropertyAccessor, TurnContext } from "botbuilder";
 import { ChoiceFactory, ChoicePrompt, ComponentDialog, DialogSet, DialogTurnStatus, ListStyle, WaterfallDialog, WaterfallStepContext } from "botbuilder-dialogs";
 import { CustomDialogInterface } from "../configs/interfacess";
 import { Dialog } from "../configs/typess";
@@ -38,7 +38,9 @@ class MainMenuDialog extends ComponentDialog implements CustomDialogInterface{
      async endStep(stepContext: WaterfallStepContext){
         console.log('MainMenuDialog --> endStep')
         await stepContext.endDialog();
-        return await stepContext.beginDialog(ContactDialogId);
+        return await stepContext.beginDialog(ContactDialogId,{
+            flex: 222
+        });
 
      }
     

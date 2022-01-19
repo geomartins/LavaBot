@@ -2,23 +2,34 @@
 // Licensed under the MIT License.
 
 import { ActivityHandler, ConversationState, MessageFactory, StatePropertyAccessor, TurnContext, UserState } from 'botbuilder';
-import { DialogContext, DialogSet, DialogTurnStatus } from 'botbuilder-dialogs';
+import { DialogContext, DialogSet } from 'botbuilder-dialogs';
 import { CustomBotInterface } from './configs/interfacess';
-import { Dialog } from './configs/typess';
-import { ContactDialog, ContactDialogId } from './dialogs/contact_dialog';
-import { ExitDialog, ExitDialogId } from './dialogs/exit_dialog';
-import { MainMenuDialog, MainMenuDialogId } from './dialogs/main_menu_dialog';
 import Routerr from './routerr';
+import { LuisService } from './services/luis_service';
+import { QnAMaker } from 'botbuilder-ai';
+import { QnamakerService } from './services/qnamaker_service';
+
 
 export class LavaBot extends ActivityHandler implements CustomBotInterface {
     dialogContext: DialogContext;
+    luisService: LuisService;
+    qnamakerService: QnamakerService;
 
     constructor(private userState: UserState, private conversationState: ConversationState, private dialogState: StatePropertyAccessor, private dialogSet: DialogSet) {
         super();
 
+        this.luisService = new LuisService();
+        this.qnamakerService = new QnamakerService();
+      
+       
         this.onMessage(async (context, next) => {
             this.dialogContext = await this.dialogSet.createContext(context);
-            
+
+           console.log(` This is the ${await this.luisService.topIntent(context)}`);
+
+           let answer = await this.qnamakerService.getAnswers(context)
+           console.log(`Qna answer ${answer}`);
+
             await new Routerr(this.dialogContext, this.dialogSet).run(context);
             await next();
         });

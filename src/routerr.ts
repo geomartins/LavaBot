@@ -23,14 +23,15 @@ class Routerr{
         }
     }
 
-    private async efficientRoute(dialogContext: DialogContext, dialogId: string, delay?: number){
+    private async efficientRoute(dialogContext: DialogContext, dialogId: string, delay?: number, params?: any){
         const results = await dialogContext.continueDialog();
         console.log(` xxxx ${dialogId} ${results.status}`)
         if ( (results.status === DialogTurnStatus.empty) ) {
             if(delay){
                 await new Promise(resolve => setTimeout(resolve, delay));
             }
-            await this.dialogContext.beginDialog(dialogId);
+
+            await this.dialogContext.beginDialog(dialogId, params);
         }
         
     }

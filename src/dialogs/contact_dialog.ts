@@ -25,6 +25,7 @@ class ContactDialog extends ComponentDialog implements CustomDialogInterface{
 
 
      async beginStep(stepContext: WaterfallStepContext){
+         //console.log(`${stepContext.options['flex']} isssssssssssssssssss`)
         console.log('contactDialog --> beginStep')
        await stepContext.context.sendActivity(MessageFactory.text('You are already in the contact dialog'));
         const promptOptions = { prompt: 'Please enter your email.', retryPrompt: 'Pls enter a valid email' };

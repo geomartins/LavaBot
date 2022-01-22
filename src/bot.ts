@@ -25,10 +25,10 @@ export class LavaBot extends ActivityHandler implements CustomBotInterface {
         this.onMessage(async (context, next) => {
             this.dialogContext = await this.dialogSet.createContext(context);
 
-           console.log(` This is the ${await this.luisService.topIntent(context)}`);
+        //    console.log(` This is the ${await this.luisService.topIntent(context)}`);
 
-           let answer = await this.qnamakerService.getAnswers(context)
-           console.log(`Qna answer ${answer}`);
+        //    let answer = await this.qnamakerService.getAnswers(context)
+        //    console.log(`Qna answer ${answer}`);
 
             await new Routerr(this.dialogContext, this.dialogSet).run(context);
             await next();

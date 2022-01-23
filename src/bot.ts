@@ -6,7 +6,6 @@ import { DialogContext, DialogSet } from 'botbuilder-dialogs';
 import { CustomBotInterface } from './configs/interfacess';
 import Routerr from './routerr';
 import { LuisService } from './services/luis_service';
-import { QnAMaker } from 'botbuilder-ai';
 import { QnamakerService } from './services/qnamaker_service';
 
 
@@ -24,6 +23,7 @@ export class LavaBot extends ActivityHandler implements CustomBotInterface {
        
         this.onMessage(async (context, next) => {
             this.dialogContext = await this.dialogSet.createContext(context);
+            console.log('iiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiii')
 
         //    console.log(` This is the ${await this.luisService.topIntent(context)}`);
 
@@ -48,6 +48,7 @@ export class LavaBot extends ActivityHandler implements CustomBotInterface {
     }
   
     async run(context: TurnContext) {
+        console.log('Inside bot run')
         await super.run(context);
         await this.conversationState.saveChanges(context, true);
         await this.userState.saveChanges(context, true);

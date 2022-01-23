@@ -96,6 +96,8 @@ const lavaBot = new LavaBot(userState, conversationState, dialogState, dialogSet
 
 // Listen for incoming requests.
 server.post('/api/messages', async (req, res) => {
+    console.log('222222222222222222222222222222222222222222222222222222222222222iiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiii')
+
     // Route received a request to adapter for processing
     await adapter.process(req, res, (context) => lavaBot.run(context));
 });

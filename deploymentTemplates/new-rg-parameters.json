@@ -3,28 +3,28 @@
     "contentVersion": "1.0.0.0",
     "parameters": {
         "groupLocation": {
-            "value": "global"
+            "value": ""
         },
         "groupName": {
-            "value": "SkyResourceGroup"
+            "value": ""
         },
         "appId": {
-            "value": "3ad923a6-b87c-45a6-82dc-69e3d05b0ad6"
+            "value": ""
         },
         "appSecret": {
-            "value": "@_Sunday51#abiodun23"
+            "value": ""
         },
         "appType": {
-            "value": "UserAssignedMSI"
+            "value": "SingleTenant"
         },
         "botId": {
-            "value": "SkyAppService"
+            "value": ""
         },
         "botSku": {
-            "value": "F0"
+            "value": ""
         },
         "newAppServicePlanName": {
-            "value": "ASP-SkyResourceGroup-a5c9"
+            "value": ""
         },
         "newAppServicePlanSku": {
             "value": {
@@ -36,19 +36,19 @@
             }
         },
         "newAppServicePlanLocation": {
-            "value": "eastus"
+            "value": ""
         },
         "newWebAppName": {
-            "value": "SkyAppService"
+            "value": ""
         },
         "tenantId": {
-            "value": "d8a59988-a822-481e-9289-fec881d14394"
+            "value": ""
         },
         "existingUserAssignedMSIName": {
-            "value": "SkyyBot"
+            "value": ""
         },
         "existingUserAssignedMSIResourceGroupName": {
-            "value": "SkyResourceGroup"
+            "value": ""
         }
     }
 }

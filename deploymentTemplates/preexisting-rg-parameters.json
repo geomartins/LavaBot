@@ -3,22 +3,22 @@
     "contentVersion": "1.0.0.0",
     "parameters": {
         "appId": {
-            "value": ""
+            "value": "aa7161cd-fa3e-4950-98d0-42bb5b0422b7"
         },
         "appSecret": {
-            "value": ""
+            "value": "@_Sunday50martinsabiodun"
         },
         "appType": {
-            "value": "MultiTenant"
+            "value": "SingleTenant"
         },
         "botId": {
-            "value": ""
+            "value": "lavaaaBot"
         },
         "botSku": {
-            "value": ""
+            "value": "F0"
         },
         "newAppServicePlanName": {
-            "value": ""
+            "value": "lavaBotServicePlan"
         },
         "newAppServicePlanSku": {
             "value": {
@@ -30,22 +30,22 @@
             }
         },
         "appServicePlanLocation": {
-            "value": ""
+            "value": "eastus"
         },
         "existingAppServicePlan": {
-            "value": ""
+            "value": "lavaBotServicePlan"
         },
         "newWebAppName": {
-            "value": ""
+            "value": "lavaBotService"
         },
         "tenantId": {
-            "value": ""
+            "value": "d8a59988-a822-481e-9289-fec881d14394"
         },
         "existingUserAssignedMSIName": {
-            "value": ""
+            "value": "lavaBot"
         },
         "existingUserAssignedMSIResourceGroupName": {
-            "value": ""
+            "value": "LavaResourceGroup"
         }
     }
 }

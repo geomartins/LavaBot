@@ -2,6 +2,9 @@ import { StatePropertyAccessor, TurnContext } from "botbuilder";
 import { ChoiceFactory, ChoicePrompt, ComponentDialog, DialogSet, DialogTurnStatus, ListStyle, WaterfallDialog, WaterfallStepContext } from "botbuilder-dialogs";
 import { CustomDialogInterface } from "../configs/interfacess";
 import { Dialog } from "../configs/typess";
+import Appointment from "../models/appointment";
+import Routerr from "../routerr";
+import { AppointmentDialog, AppointmentDialogId } from "./appointment_dialog";
 import { ContactDialogId } from "./contact_dialog";
 
 const MainMenuDialogId = 'MainMenuDialogId'
@@ -14,6 +17,7 @@ class MainMenuDialog extends ComponentDialog implements CustomDialogInterface{
         super(MainMenuDialogId)
 
         this.addDialog(new ChoicePrompt(MENU_PROMPT))
+        this.addDialog(new AppointmentDialog(dialogState))
         this.addDialog(new WaterfallDialog(MAIN_MENU_WATER_FALL, [
             this.beginStep.bind(this),
             this.endStep.bind(this),
@@ -29,7 +33,7 @@ class MainMenuDialog extends ComponentDialog implements CustomDialogInterface{
         return await stepContext.prompt(MENU_PROMPT, {
             prompt: "How can I be of service to you?",
             retryPrompt: "What services are you interested in",
-            choices: ChoiceFactory.toChoices(['Contact', 'Branch Information', 'Products', 'E-channels', 'Loan Calculator', 'Deposit Calculator']),
+            choices: ChoiceFactory.toChoices(['Contact', 'Book Appointment']),
             style: ListStyle.heroCard
         });
 
@@ -38,9 +42,18 @@ class MainMenuDialog extends ComponentDialog implements CustomDialogInterface{
      async endStep(stepContext: WaterfallStepContext){
         console.log('MainMenuDialog --> endStep')
         await stepContext.endDialog();
-        return await stepContext.beginDialog(ContactDialogId,{
-            flex: 222
-        });
+        switch(stepContext.result.value) {
+            case 'Contact':
+                return await stepContext.beginDialog(ContactDialogId)
+            case 'Book Appointment':
+                return await stepContext.beginDialog(AppointmentDialogId)
+                break;
+            default:
+                return await stepContext.beginDialog(MainMenuDialogId)
+        }
+        // return await stepContext.beginDialog(ContactDialogId,{
+        //     flex: 222
+        // });
 
      }
     

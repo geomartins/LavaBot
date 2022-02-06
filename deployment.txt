@@ -46,7 +46,6 @@ NB: Never forget to restart the Azure Service after each deployment
   >> https://docs.squidex.io/02-documentation/developer-guides/api-overview/api
   >> https://cloud.squidex.io/app/dragbot/settings/clients
 
-
 ======================================================================================================================================================================
 
 

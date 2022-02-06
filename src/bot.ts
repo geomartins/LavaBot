@@ -24,7 +24,7 @@ export class LavaBot extends ActivityHandler implements CustomBotInterface {
        
         this.onMessage(async (context, next) => {
             this.dialogContext = await this.dialogSet.createContext(context);
-            await new SquidexService();
+            //await new SquidexService();
            
             // console.log('iiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiii')
 

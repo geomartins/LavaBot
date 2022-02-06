@@ -20,7 +20,17 @@ type Dialog = {
     status?: "start" | "progress" | "end",
     dc?: DialogContext
 }
+
+type AppointmentData = {
+    email: string,
+    telephone: string,
+    appointment_date: string,
+    appointment_medium: string
+    surname: string,
+    other_name: string
+}
 export {
     Dialog,
-    MiddlewareData
+    MiddlewareData,
+    AppointmentData
 }

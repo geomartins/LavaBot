@@ -1,5 +1,6 @@
 import { TurnContext } from "botbuilder";
-import { DialogContext, DialogSet, DialogTurnStatus } from "botbuilder-dialogs";
+import { DialogContext, DialogSet, DialogTurnStatus, WaterfallStepContext } from "botbuilder-dialogs";
+import { AppointmentDialogId } from "./dialogs/appointment_dialog";
 import { ContactDialogId } from "./dialogs/contact_dialog";
 import { MainMenuDialogId } from "./dialogs/main_menu_dialog";
 
@@ -17,11 +18,16 @@ class Routerr{
                 console.log('contact swich ---///')
                 await this.efficientRoute(this.dialogContext, ContactDialogId)
                 break;
+            case 'Book Appointment':
+                console.log('appointment swich ---///')
+                await this.efficientRoute(this.dialogContext, AppointmentDialogId)
+                break;
             default:
                 console.log('mainmenu swich ---///')
                 await this.efficientRoute(this.dialogContext, MainMenuDialogId, 2000)
         }
     }
+
 
     private async efficientRoute(dialogContext: DialogContext, dialogId: string, delay?: number, params?: any){
         const results = await dialogContext.continueDialog();

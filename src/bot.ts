@@ -7,6 +7,7 @@ import { CustomBotInterface } from './configs/interfacess';
 import Routerr from './routerr';
 import { LuisService } from './services/luis_service';
 import { QnamakerService } from './services/qnamaker_service';
+import SquidexService from './services/squidex_service';
 
 
 export class LavaBot extends ActivityHandler implements CustomBotInterface {
@@ -23,7 +24,9 @@ export class LavaBot extends ActivityHandler implements CustomBotInterface {
        
         this.onMessage(async (context, next) => {
             this.dialogContext = await this.dialogSet.createContext(context);
-            console.log('iiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiii')
+            await new SquidexService();
+           
+            // console.log('iiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiii')
 
         //    console.log(` This is the ${await this.luisService.topIntent(context)}`);
 

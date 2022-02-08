@@ -24,10 +24,10 @@ type Dialog = {
 type AppointmentData = {
     email: string,
     telephone: string,
-    appointment_date: string,
-    appointment_medium: string
+    appointmentDate: string,
+    appointmentMedium: string
     surname: string,
-    other_name: string
+    otherName: string
 }
 export {
     Dialog,

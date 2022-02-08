@@ -5,6 +5,8 @@ const convertToSquidexJson = (obj: object) => {
             'iv': obj[property]
         }
     }
+
+    console.log('8888888888888888888888888 '+JSON.stringify(result))
     return result;
 }
 

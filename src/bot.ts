@@ -22,6 +22,9 @@ export class LavaBot extends ActivityHandler implements CustomBotInterface {
         this.qnamakerService = new QnamakerService();
       
        
+        this.onTurn((async (context, next) => {
+            return await next();
+        })),
         this.onMessage(async (context, next) => {
             this.dialogContext = await this.dialogSet.createContext(context);
             //await new SquidexService();

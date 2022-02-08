@@ -1,5 +1,5 @@
 import { MessageFactory, StatePropertyAccessor, TurnContext } from "botbuilder";
-import { ChoiceFactory, ChoicePrompt, NumberPrompt, ComponentDialog, DialogSet, DialogTurnStatus, ListStyle, TextPrompt, WaterfallDialog, WaterfallStepContext, DateTimePrompt, ConfirmPrompt } from "botbuilder-dialogs";
+import { ChoiceFactory, ChoicePrompt, NumberPrompt, ComponentDialog, DialogSet, DialogTurnStatus, ListStyle, TextPrompt, WaterfallDialog, WaterfallStepContext, DateTimePrompt, ConfirmPrompt, PromptOptions } from "botbuilder-dialogs";
 import { CustomDialogInterface } from "../configs/interfacess";
 import { AppointmentData, Dialog } from "../configs/typess";
 import Appointment from "../models/appointment";
@@ -38,7 +38,9 @@ class AppointmentDialog extends ComponentDialog implements CustomDialogInterface
             this.telephoneRequestStep.bind(this),
             this.emailRequestStep.bind(this),
             this.appointmentDateRequestStep.bind(this),
+            this.appointmentMediumRequestStep.bind(this),
             this.summaryStep.bind(this),
+            this.submitAppointmentStep.bind(this),
             this.endStep.bind(this),
         ]));
 
@@ -48,6 +50,9 @@ class AppointmentDialog extends ComponentDialog implements CustomDialogInterface
 
      async beginStep(stepContext: WaterfallStepContext){
          //console.log(`${stepContext.options['flex']} isssssssssssssssssss`)
+         if(stepContext.options['skip'] == true){
+             return await stepContext.next();
+         }
         await stepContext.context.sendActivity(MessageFactory.text('Welcome to Book Appointment Section'));
         return stepContext.next();
     }
@@ -72,7 +77,7 @@ class AppointmentDialog extends ComponentDialog implements CustomDialogInterface
 
     async emailRequestStep(stepContext: WaterfallStepContext){
         stepContext.values['telephone'] = stepContext.result as string;
-        const promptOptions = { prompt: 'Please enter your email address.', retryPrompt: 'Pls enter a valid email address' };
+        const promptOptions: PromptOptions = { prompt: 'Please enter your email address.', retryPrompt: 'Pls enter a valid email address' };
         return await stepContext.prompt(EmailPromptId, promptOptions);
     }
 
@@ -83,14 +88,23 @@ class AppointmentDialog extends ComponentDialog implements CustomDialogInterface
     }
 
     async appointmentMediumRequestStep(stepContext: WaterfallStepContext){
-        stepContext.values['appointment_date'] = stepContext.result;
-        const promptOptions = { prompt: 'Please enter your preferred appointment medium.', choices: ChoiceFactory.toChoices(['Skype','Zoom']), retryPrompt: 'Pls enter a valid appointment medium' };
+        stepContext.values['appointment_date'] = stepContext.result[0].value+'T00:00:00Z';
+        const promptOptions: PromptOptions = { prompt: 'Please enter your preferred appointment medium.', choices: ChoiceFactory.toChoices(['Skype','Zoom']), retryPrompt: 'Pls enter a valid appointment medium' };
         return await stepContext.prompt(AppointmentMediumPromptId, promptOptions);
     }
 
     async summaryStep(stepContext: WaterfallStepContext){
-        stepContext.values['appointment_medium'] = stepContext.result;
+        stepContext.values['appointment_medium'] = stepContext.result.value;
+        let surname = stepContext.values['surname'];
+        let other_name = stepContext.values['other_name'];
+        let telephone = stepContext.values['telephone'];
+        let email = stepContext.values['email'];
+        let appointment_date = stepContext.values['appointment_date'];
+        let appointment_medium = stepContext.values['appointment_medium']
 
+        let info = `Surname is ${surname}... Othername is ${other_name}... \n Telephone is ${telephone}.. \n Email is ${email}... \n Appointment Date is ${appointment_date}.. Appointment medium is ${appointment_medium} `
+        stepContext.context.sendActivity(MessageFactory.text(info));
+        
         //Here i want to summarize in an adaptive card
         //Tell the user to confirm if the information is ok
         //
@@ -98,22 +112,26 @@ class AppointmentDialog extends ComponentDialog implements CustomDialogInterface
         // await this.dialogState.set(stepContext.context, {
         //     email: stepContext.result
         // })
-        return await stepContext.context.sendActivity('Contact Summary step concluded')
+        
+        const promptOptions: PromptOptions = { prompt: 'Kindly confirm if all values are correct..', choices: ChoiceFactory.toChoices(['yes', 'no']), retryPrompt: 'Kindly confirm if all values are correct.' };
+        return await stepContext.prompt(SummaryPromptId, promptOptions);
 
         
      }
      async submitAppointmentStep(stepContext: WaterfallStepContext){
          if(stepContext.result == false){
-             return await stepContext.beginDialog(SurnamePromptId);
+             stepContext.endDialog();
+             return await stepContext.beginDialog(AppointmentDialogId, { skip: true});
+            
          }
 
          let data: AppointmentData = {
              surname : stepContext.values['surname'],
-             other_name: stepContext.values['email'],
+             otherName: stepContext.values['other_name'],
              email: stepContext.values['email'],
              telephone: stepContext.values['telephone'],
-             appointment_date: stepContext.values['appointment_date'],
-             appointment_medium: stepContext.values['appointment_medium'],
+             appointmentDate: stepContext.values['appointment_date'],
+             appointmentMedium: stepContext.values['appointment_medium'],
          }
 
          try{
@@ -121,21 +139,19 @@ class AppointmentDialog extends ComponentDialog implements CustomDialogInterface
             stepContext.context.sendActivity('Congratulations!!! Appointment scheduled successfully');
             return await stepContext.next();
          }catch(err){
-            stepContext.context.sendActivity('Oops!!! Something went wrong.. Please try again later');
+             console.log(err);
+             stepContext.context.sendActivity('Oops!!! Something went wrong.. Please try again later');
             return await stepContext.next();
          }
          
      }
 
-     
 
      async endStep(stepContext: WaterfallStepContext){
-        console.log('Appointment Dialog --> endStep')
-        return stepContext.endDialog();
+        return await stepContext.endDialog();
      }
-
         
-    
+
      async run(turnContext: TurnContext, accessor: StatePropertyAccessor) {
         const dialogSet = new DialogSet(accessor);
         dialogSet.add(this);
